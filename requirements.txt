@@ -22,14 +22,8 @@ google-auth==1.35.0
 google-auth-oauthlib==0.4.6
 grpcio==1.44.0
 gunicorn==20.0.4
-idna==3.3
-importlib-metadata==4.11.3
-ipykernel==6.9.2
-ipython==8.1.1
-jedi==0.18.1
-Jinja2==3.1.1
-joblib==1.1.0
-kiwisolver==1.4.2
+
+
 Markdown==3.3.6
 MarkupSafe==2.1.1
 munkres==1.1.4
@@ -37,8 +31,7 @@ nest-asyncio==1.5.4
 networkx==2.6.3
 newsapi==0.1.1
 newsapi-python==0.2.6
-nltk==3.7
-numpy==1.19.5
+
 oauthlib==3.2.0
 packaging==21.3
 pandas==1.4.1

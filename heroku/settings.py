@@ -25,9 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!-fd7e)hti#vpwy64hh&wd8htdfqi5_$gbq!#b)oo1c0et8nct'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'news-and-blogs-app.herokuapp.com']
 
 
 # Application definition
@@ -39,9 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'main',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -77,8 +83,11 @@ WSGI_APPLICATION = 'heroku.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE' : 'django.db.backends.postgresql',
+        'NAME' :'News Blog',
+        'USER':'postgres',
+        'PASSWORD':'1234',
+        'HOST':'localhost'
     }
 }
 
@@ -119,7 +128,7 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
+STATIC_ROOT=os.path.join(BASE_DIR,'static')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
