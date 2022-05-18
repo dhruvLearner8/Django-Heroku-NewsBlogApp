@@ -5,8 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from numpy import source
 from .models import User_details,Post
-#from newsapi import NewsApiClient
-#from .serializers import PostSerializers
+from newsapi.newsapi_client import NewsApiClient
+from .serializers import PostSerializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -94,3 +94,119 @@ def register(request):
 
     else:
         return render(request,'register.html')
+
+def home(request):
+    if 'blog_user' in request.session.keys():
+        newsApi= NewsApiClient(api_key='d687b68ba56942568fa4ce1153fbc9ea')
+        headLines=newsApi.get_top_headlines(sources='bbc-news,business-insider,bbc-sport,cbc-news')
+        articles=headLines['articles']
+        desc=[]
+        news=[]
+        img=[]
+        url=[]
+        for i in range(0,len(articles)):
+            article=articles[i]
+            desc.append(article['description'])
+            news.append(article['title'])
+            img.append(article['urlToImage'])
+            url.append(article['url'])
+        mylist=zip(news,desc,img,url)
+        return render(request,'home.html',context={'mylist':mylist})
+    else:
+        return redirect('login')
+
+def dashboard(request):
+    if 'blog_user' in request.session.keys():
+        user=User_details.objects.get(id=int(request.session['blog_user']))
+        blog=Post.objects.filter(author=user)
+        
+        return render(request,'dashboard.html',{'blog':blog,'user':user})
+
+
+def createblog(request):
+    if 'blog_user' in request.session.keys():
+        if request.method=='POST':
+            title=request.POST['title']
+            content=request.POST['content']
+
+            user=User_details.objects.get(id=int(request.session['blog_user']))
+            #blog=Post.objects.filter(author=user)
+            blog=Post()
+            #blog.id=pk
+            blog.author=user
+            blog.author_name=user.username
+            blog.title=title
+            blog.content=content
+            blog.save()
+            return redirect('dashboard')
+        else:
+            return render(request,'createblog.html')
+    else:
+        return redirect('login')
+
+def Delete_blog(request,id):
+    if 'blog_user' in request.session.keys():  
+        blog = Post.objects.get(id = id)
+        blog.delete()
+        return redirect('dashboard')
+    else:
+        return redirect('login')
+
+def view(request,id):
+    if 'blog_user' in request.session.keys():  
+        blog = Post.objects.get(id = id)
+        return render(request,'view.html',{'blog':blog})
+
+    
+def dash1(request):
+    if 'blog_user' in request.session.keys():
+        return redirect('http://127.0.0.1:8000/dashboard')
+
+def home1(request):
+    if 'blog_user' in request.session.keys():
+        return redirect("http://127.0.0.1:8000/home")
+
+def cr1(request):
+    if 'blog_user' in request.session.keys():
+        return redirect("http://127.0.0.1:8000/createblog")
+
+@api_view(['GET','POST'])
+def post_list(request, format=None):
+    if request.method=='GET':
+        posts=Post.objects.all()
+        serializer= PostSerializers(posts,many=True)
+        return Response(serializer.data)
+       # return JsonResponse({"drinks":serializer.data})
+    if request.method=='POST':
+        serializer= PostSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['GET','PUT','DELETE'])
+def post_detail(request,id,format=None):
+    try:
+       post= Post.objects.get(pk=id)
+    except Post.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method=='GET':
+        serializer=PostSerializers(post)
+        return Response(serializer.data)
+
+    elif request.method=='PUT':
+        serializer=PostSerializers(post,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method=='DELETE':
+        post.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+def logout(request):
+    if 'blog_user' in request.session.keys():
+        del request.session['blog_user']
+        return redirect('login')
+    else:
+        return redirect('login')
