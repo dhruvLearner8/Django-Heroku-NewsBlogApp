@@ -160,15 +160,15 @@ def view(request,id):
     
 def dash1(request):
     if 'blog_user' in request.session.keys():
-        return redirect('http://127.0.0.1:8000/dashboard')
+        return redirect('dashboard')
 
 def home1(request):
     if 'blog_user' in request.session.keys():
-        return redirect("http://127.0.0.1:8000/home")
+        return redirect("home")
 
 def cr1(request):
     if 'blog_user' in request.session.keys():
-        return redirect("http://127.0.0.1:8000/createblog")
+        return redirect("createblog")
 
 @api_view(['GET','POST'])
 def post_list(request, format=None):
