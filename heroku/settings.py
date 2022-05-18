@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'heroku.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
+'''DATABASES = {
     'default': {
         'ENGINE' : 'django.db.backends.postgresql',
         'NAME' :'News Blog',
@@ -91,8 +91,18 @@ DATABASES = {
         'PASSWORD':'1234',
         'HOST':'localhost'
     }
-}
+}'''
 
+DATABASES = {
+    'default': {
+        'ENGINE' : 'django.db.backends.postgresql',
+        'NAME' :'dksjabcrjuoac',
+        'USER':'snqluympmlwbsg',
+        'PASSWORD':'7fe094e8f906a21cd92151d39bb5a54685399821f0e293ec1a406de877b9bce7',
+        'HOST':'ec2-44-196-223-128.compute-1.amazonaws.com',
+        'PORT':'5432'
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
